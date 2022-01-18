@@ -1,21 +1,7 @@
 import { useRef } from "react";
 import styled from "styled-components";
 import useImage from "./context/ImageContext";
-
-const images = [
-  require("./images/0.jpg"),
-  require("./images/1.jpg"),
-  require("./images/2.jpg"),
-  require("./images/3.jpg"),
-  require("./images/4.jpg"),
-  require("./images/5.jpg"),
-  require("./images/6.jpg"),
-  require("./images/7.jpg"),
-  require("./images/8.jpg"),
-  require("./images/9.jpg"),
-  require("./images/10.jpg"),
-  require("./images/11.jpg"),
-];
+import locations from "./constants/locations";
 
 const Container = styled.div`
   background-color: #cdcdcd;
@@ -68,34 +54,45 @@ const ToolsHeading = styled.h1`
   }
 `;
 
-const ToolsButtons = styled.div`
-  padding-top: 35px;
+const LocationDisplay = styled.h3`
+  margin-top: 30px;
+  font-weight: light;
+`;
+
+const NavigationButtons = styled.nav`
+  margin-top: 35px;
   display: flex;
   flex-wrap: wrap;
   gap: 25px;
 `;
 
-const ToolsButton = styled.button`
-  width: 35px;
-  height: 35px;
-  background-color: #bdc3c7;
-  border: none;
-  border-radius: 25px;
-  font-weight: 700;
-  font-size: 20px;
-  color: #303841;
-  transition: 0.8s all;
-
-  &:hover {
-    cursor: pointer;
-    transform: scale(1.08);
-  }
-
-  &.current {
-    background-color: #113f67;
-    color: #fff;
-  }
+const NavButton = styled.button`
+  padding: 5px;
 `;
+
+// const ToolsButton = styled.button`
+//   width: 35px;
+//   height: 35px;
+//   background-color: #bdc3c7;
+//   border: none;
+//   border-radius: 25px;
+//   font-weight: 700;
+//   font-size: 20px;
+//   color: #303841;
+//   transition: 0.8s all;
+
+//   &:hover {
+//     cursor: pointer;
+//     transform: scale(1.08);
+//   }
+
+//   &.current {
+//     background-color: #113f67;
+//     color: #fff;
+//   }
+// `;
+
+const InputWrapper = styled.div``;
 
 const Footer = styled.div`
   margin-top: 25px;
@@ -104,29 +101,28 @@ const Footer = styled.div`
 
 function App() {
   const [image, setImage] = useImage();
+  const data = locations[image];
 
   return (
     <Container>
       <Card>
-        <Image height="600px" src={images[image]} />
+        <Image height="600px" src={data.image} />
         <ToolsSection>
           <ToolsHeading>Silver Bullet Adventure</ToolsHeading>
-          <ToolsButtons>
-            {images
-              .map((_v, index) => index)
-              .map((num) =>
-                image === num ? (
-                  <ToolsButton
-                    className="current"
-                    onClick={() => setImage(num)}
-                  >
-                    {num}
-                  </ToolsButton>
-                ) : (
-                  <ToolsButton onClick={() => setImage(num)}>{num}</ToolsButton>
-                )
-              )}
-          </ToolsButtons>
+          <LocationDisplay>{data.title}</LocationDisplay>
+          <NavigationButtons>
+            {Object.keys(data.directions).map((direction) => {
+              return (
+                <NavButton
+                  onClick={() => {
+                    setImage(data.directions[direction]);
+                  }}
+                >
+                  {direction}
+                </NavButton>
+              );
+            })}
+          </NavigationButtons>
         </ToolsSection>
       </Card>
       <Footer>
